@@ -1,8 +1,11 @@
 import React from "react";
 import Button from "../components/Button";
 
-export default function Start({ onStart }) {
+export default function Start({onStart}) {
   return (
-    <button onClick={onStart}>qweasdzxc</button>
+    <div className="container">
+      <h1>Welcome to Sudoku!</h1>
+      <Button onClick={onStart}>Start</Button>
+    </div>
   );
 }
