@@ -4,7 +4,8 @@ import React, { useEffect } from "react";
 
 export default function GamePage({
   board, selectedCell,
-  selectCell, setCellValue, onFinish
+  selectCell, setCellValue, 
+  onFinish, initialGrid
  }) {
   useEffect(() => {
     console.log("GamePage mounted, board:", board);
@@ -24,6 +25,15 @@ export default function GamePage({
     setCellValue(num);
   };
 
+  const handleClearCell = () => {
+    if(selectedCell) {
+      const { row, col } = selectedCell;
+      if(initialGrid && initialGrid[row][col] === 0){
+        setCellValue(0);
+      }
+    }
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <h2>Game Page</h2>
@@ -34,6 +44,7 @@ export default function GamePage({
           grid={board}
           selectedCell={selectedCell}
           onCellClick={selectCell}
+          initialGrid={initialGrid}
         />
       <div style={{
         marginTop: 30,
@@ -87,18 +98,25 @@ export default function GamePage({
             gap: 10
           }}>
             <button
-              onClick={() => setCellValue(0)}
+              onClick={handleClearCell}
               style={{
+                backgroundColor: selectedCell && initialGrid && initialGrid[selectedCell.row][selectedCell.col] !== 0
+                  ? "#bdc3c7"
+                  : "#e74c3c",
                 padding: "10px 20px",
-                backgroundColor: "#e74c3c",
                 color: "white",
                 border: "none",
                 borderRadius: 5,
-                cursor: "pointer",
+                cursor: selectedCell && initialGrid && initialGrid[selectedCell.row][selectedCell.col] !== 0
+                  ? "not-allowed"
+                  : "pointer",
                 fontSize: "16px"
               }}
+              disabled={selectedCell && initialGrid && initialGrid[selectedCell.row][selectedCell.col] !== 0}
             >
-              Очистити клітинку
+              {selectedCell && initialGrid && initialGrid[selectedCell.row][selectedCell.col] !== 0
+              ? "Неможливо очистити"
+              : "Очистити клітинку"}
             </button>
           </div>
         </div>
@@ -120,7 +138,6 @@ export default function GamePage({
         <div style={{
           marginTop: 20,
           padding: 10,
-          backgroundColor:  "#e0e0e0",
           borderRadius: 5
         }}>
           <p style={{ margin: 0 }}>

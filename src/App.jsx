@@ -28,6 +28,7 @@ export default function App() {
         {page === "game" && (
           <Game
             board={sudoku.grid}
+            initialGrid={sudoku.initialGrid}
             selectedCell={sudoku.selectedCell}
             selectCell={sudoku.selectCell}
             setCellValue={sudoku.setCellValue}

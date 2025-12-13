@@ -1,4 +1,4 @@
-export default function Cell({ value, isSelected, onClick, row, col }) {
+export default function Cell({ value, isSelected, onClick, row, col, isInitial = false }) {
     const borderStyle = {
         borderTop: row % 3 === 0 ? '2px solid #000' : '1px solid #999',
         borderLeft: col % 3 === 0 ? '2px solid #000' : '1px solid #999',
@@ -6,11 +6,9 @@ export default function Cell({ value, isSelected, onClick, row, col }) {
         borderBottom: row === 8 ? '2px solid #000' : (row + 1) % 3 === 0 ? '2px solid #000' : '1px solid #999',
     };
 
-    const isInitial = value !== 0;
-
     return (
         <div 
-            onClick={onClick}    
+            onClick={!isInitial ? onClick : undefined}    
             style={{
                 width: '50px',
                 height: '50px',
@@ -20,15 +18,21 @@ export default function Cell({ value, isSelected, onClick, row, col }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '28px',
-                cursor: 'pointer',
-                color: isInitial ? '#1a237e' : '#2196f3',
+                cursor: isInitial ? 'default' : 'pointer',
+                color: isInitial ? '#000000ff' : '#006cc4ff',
                 fontWeight: 'bold',
                 fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                transition: 'background-color 0.2s'
+                transition: 'background-color 0.2s',
+                userSelect: 'none'
             }}
             onMouseEnter={(e) => {
                 if(!isSelected){
                     e.target.style.backgroundColor = "#fff";
+                }
+            }}
+            onMouseLeave={(e) => {
+                if(!isSelected && !isInitial){
+                    e.target.style.backgroundColor = '#fff';
                 }
             }}
             >
