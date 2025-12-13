@@ -121,15 +121,7 @@ export default function GamePage({
           </div>
         </div>
       </div>
-      
-
-        
-      <SudokuG 
-        grid={board} 
-        selectedCell={null} 
-        onCellClick={() => {}} 
-      />
-
+    
       <div style={{ marginTop: 16 }}>
         <Button onClick={onFinish}>Завершити гру</Button>
       </div>
