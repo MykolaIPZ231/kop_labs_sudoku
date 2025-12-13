@@ -1,20 +1,27 @@
 import Cell from "./Cell.jsx";
 
-export default function SudokuG(){
-    const placeholderGrid = Array.from({length: 9}, () =>
-        Array(9).fill(null)
-    );
-
-    return(
+export default function SudokuG({ grid, selectedCell, onCellClick }) {
+    return (
         <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(9, 1fr)',
-            gridTemplateRows: 'repeat(9, 1fr)',
-            gap: "0"
+            display: "grid",
+            gridTemplateColumns: "repeat(9, 40px)",
+            gridTemplateRows: "repeat(9, 40px)",
+            gap: "2px"
         }}>
-            {placeholderGrid.flat().map((val, idx) => (
-                <Cell key={idx} value={val} />
-            ))}
+            {grid.map((row, rIndex) =>
+                row.map((value, cIndex) => (
+                    <Cell
+                        key={`${rIndex}-${cIndex}`}
+                        value={value}
+                        isSelected={
+                            selectedCell?.row === rIndex &&
+                            selectedCell?.col === cIndex
+                        }
+                        onClick={onCellClick ? () => onCellClick(rIndex, cIndex) : undefined}
+                        row={rIndex}
+                        col={cIndex}
+                    />  
+                )))}
         </div>
     );
 }
