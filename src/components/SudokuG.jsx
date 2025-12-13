@@ -1,6 +1,6 @@
 import Cell from "./Cell.jsx";
 
-export default function SudokuG({ grid, selectedCell, onCellClick }) {
+export default function SudokuG({ grid, selectedCell, onCellClick, initialGrid }) {
     return (
         <div style={{
             display: "grid",
@@ -9,7 +9,9 @@ export default function SudokuG({ grid, selectedCell, onCellClick }) {
             gap: "2px"
         }}>
             {grid.map((row, rIndex) =>
-                row.map((value, cIndex) => (
+                row.map((value, cIndex) => {
+                    const isInitial = initialGrid && initialGrid[rIndex][cIndex] !== 0;
+                    return (
                     <Cell
                         key={`${rIndex}-${cIndex}`}
                         value={value}
@@ -20,8 +22,10 @@ export default function SudokuG({ grid, selectedCell, onCellClick }) {
                         onClick={onCellClick ? () => onCellClick(rIndex, cIndex) : undefined}
                         row={rIndex}
                         col={cIndex}
+                        isInitial={isInitial}
                     />  
-                )))}
+                    );
+            }))}
         </div>
     );
 }

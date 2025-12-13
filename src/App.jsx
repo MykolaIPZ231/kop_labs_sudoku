@@ -14,7 +14,7 @@ export default function App() {
 
     const handleStart = (difficulty) => {
         generator.regenerate(difficulty); 
-        sudoku.setGrid(generator.board);
+        sudoku.setInitialGridValues(generator.board);
         goToGame();
     };
 
