@@ -29,6 +29,7 @@ export default function useSudoku() {
 
     return{
         grid,
+        setGrid,
         selectedCell,
         selectCell,
         setCellValue,

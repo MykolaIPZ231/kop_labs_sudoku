@@ -1,4 +1,5 @@
 import useNavigation from "./hooks/useNavigation";
+import useSudoku from "./hooks/useSud";
 import useSudokuGenerator from "./hooks/sudGen";
 import Header from "./components/Header";
 import Start from "./page/Start";
@@ -8,10 +9,12 @@ import "./style.css";
 
 export default function App() {
     const { page, goToStart, goToGame, goToResults } = useNavigation();
-    const { board, regenerate } = useSudokuGenerator('medium');
+    const sudoku = useSudoku();
+    const generator = useSudokuGenerator('medium');
 
-    const handleStart = (difficulty = 'medium') => {
-        regenerate(difficulty); 
+    const handleStart = (difficulty) => {
+        generator.regenerate(difficulty); 
+        sudoku.setGrid(generator.board);
         goToGame();
     };
 
@@ -24,7 +27,10 @@ export default function App() {
 
         {page === "game" && (
           <Game
-            board={board}
+            board={sudoku.grid}
+            selectedCell={sudoku.selectedCell}
+            selectCell={sudoku.selectCell}
+            setCellValue={sudoku.setCellValue}
             onFinish={goToResults}
           />
         )}

@@ -6,6 +6,8 @@ export default function Cell({ value, isSelected, onClick, row, col }) {
         borderBottom: row === 8 ? '2px solid #000' : (row + 1) % 3 === 0 ? '2px solid #000' : '1px solid #999',
     };
 
+    const isInitial = value !== 0;
+
     return (
         <div 
             onClick={onClick}    
@@ -13,17 +15,23 @@ export default function Cell({ value, isSelected, onClick, row, col }) {
                 width: '50px',
                 height: '50px',
                 ...borderStyle,
-                background: isSelected ? "#e3f2fd" : "#fff",
+                background: isSelected ? "#5aa4daff" : "#fff",
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '28px',
                 cursor: 'pointer',
-                color: value === 0 ? 'transparent' : '#1a237e',
+                color: isInitial ? '#1a237e' : '#2196f3',
                 fontWeight: 'bold',
                 fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
                 transition: 'background-color 0.2s'
-            }}>
+            }}
+            onMouseEnter={(e) => {
+                if(!isSelected){
+                    e.target.style.backgroundColor = "#fff";
+                }
+            }}
+            >
             {value !== 0 ? value : ''}
         </div>
     );
