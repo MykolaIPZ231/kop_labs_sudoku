@@ -1,12 +1,17 @@
 import SudokuG from "../components/SudokuG";
 import Button from "../components/Button";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useSudokuValidator } from "../hooks/useSudokuValidator";
 
 export default function GamePage({
   board, selectedCell,
   selectCell, setCellValue, 
   onFinish, initialGrid
  }) {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isChecking, setIsChecking] = useState(false);
+  const { validateSudoku } = useSudokuValidator();
+
   useEffect(() => {
     console.log("GamePage mounted, board:", board);
   }, [board]);
@@ -22,16 +27,37 @@ export default function GamePage({
   }
 
   const handleNumberClick = (num) => {
+    setErrorMessage(null);
     setCellValue(num);
   };
 
   const handleClearCell = () => {
+    setErrorMessage(null);
     if(selectedCell) {
       const { row, col } = selectedCell;
       if(initialGrid && initialGrid[row][col] === 0){
         setCellValue(0);
       }
     }
+  };
+
+  const handleFinish = () =>{
+    setIsChecking(true);
+    setErrorMessage(null);
+
+    const result = validateSudoku(board);
+
+      if(result.isValid){
+        onFinish();
+      } else {
+        setErrorMessage(result.message);
+      }
+      setIsChecking(false);
+  };
+
+  const handleCellClick = (row, col) => {
+    setErrorMessage(null);
+    selectCell(row, col);
   };
 
   return (
@@ -43,9 +69,25 @@ export default function GamePage({
         <SudokuG
           grid={board}
           selectedCell={selectedCell}
-          onCellClick={selectCell}
+          onCellClick={handleCellClick}
           initialGrid={initialGrid}
         />
+
+        {errorMessage && (
+          <div style={{
+            marginTop: 20,
+            padding: 15,
+            backgroundColor: "#ffebee",
+            border: "1px solid #ef5350",
+            borderRadius: 8,
+            color: "#c62828",
+            maxWidth: "100%",
+            textAlign: "center"
+          }}>
+            {errorMessage}
+          </div>
+        )}
+
       <div style={{
         marginTop: 30,
         width: "100%",
@@ -122,15 +164,36 @@ export default function GamePage({
         </div>
       </div>
     
-      <div style={{ marginTop: 16 }}>
-        <Button onClick={onFinish}>Завершити гру</Button>
-      </div>
+      <div style={{ marginTop: 30 }}>
+          <Button 
+            onClick={handleFinish}
+            style={{
+              padding: "12px 30px",
+              fontSize: "18px",
+              backgroundColor: isChecking ? "#95a5a6" : "#2ecc71",
+              color: "white",
+              border: "none",
+              borderRadius: 5,
+              cursor: isChecking ? "wait" : "pointer",
+              minWidth: "150px"
+            }}
+            disabled={isChecking}
+          >
+            {isChecking ? "Перевірка..." : "Завершити"}
+          </Button>
+        </div>
 
-      {selectedCell && (
+      {selectedCell && !errorMessage && (
         <div style={{
           marginTop: 20,
           padding: 10,
-          borderRadius: 5
+          backgroundColor: initialGrid && initialGrid[selectedCell.row][selectedCell.col] !== 0 
+          ? "#ffecb3" 
+          : "#e8f4fc",
+          borderRadius: 5,
+          border: `1px solid ${initialGrid && initialGrid[selectedCell.row][selectedCell.col] !== 0 
+              ? "#ffd54f" 
+              : "#b3d9ff"}`
         }}>
           <p style={{ margin: 0 }}>
             row - {selectedCell.row + 1}, col - {selectedCell.col + 1}
