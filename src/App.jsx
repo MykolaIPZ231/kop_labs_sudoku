@@ -6,6 +6,7 @@ import Start from "./page/Start";
 import Game from "./page/Game";
 import Res from "./page/Res";
 import useSudokuGame from "./hooks/useSudokuGame";
+import { DifficultyProvider } from "./contexts/DifficultyContext";
 import "./style.css";
 import { useState } from "react";
 
@@ -37,8 +38,14 @@ function App() {
 
     const handleBackToStart = () => {
       goToStart();
-    }
+    };
+
+    const handleNewGame = () => {
+        goToStart();
+    };
+
     return (
+        <DifficultyProvider>
        <div className="App">
             {page === "start" && <Start onStart={handleStartGame} />}
             {page === "game" && (
@@ -59,6 +66,7 @@ function App() {
           />
         )}
       </div>
+      </DifficultyProvider>
     );
 }
 

@@ -145,27 +145,30 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000
+    zIndex: 1000,
+    backdropFilter: 'blur(4px)'
   },
   modal: {
-    backgroundColor: 'white',
+    backgroundColor: '#1a1a1a',
     padding: '30px',
-    borderRadius: '12px',
-    maxWidth: '500px',
+    borderRadius: '16px',
+    maxWidth: '600px',
     width: '90%',
     maxHeight: '90vh',
     overflowY: 'auto',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+    border: '1px solid #333'
   },
   title: {
     marginTop: 0,
-    marginBottom: '20px',
-    color: '#333',
-    textAlign: 'center'
+    marginBottom: '24px',
+    color: '#ffffff',
+    textAlign: 'center',
+    fontSize: '24px'
   },
   formGroup: {
     marginBottom: '20px'
@@ -174,87 +177,238 @@ const styles = {
     display: 'block',
     marginBottom: '8px',
     fontWeight: 'bold',
-    color: '#555'
+    color: '#cccccc',
+    fontSize: '14px'
   },
   radioGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px'
+    gap: '12px'
   },
   radioLabel: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '12px',
     cursor: 'pointer',
-    padding: '8px',
-    borderRadius: '6px',
+    padding: '12px',
+    borderRadius: '8px',
     transition: 'background-color 0.2s',
-    backgroundColor: '#f8f9fa'
+    backgroundColor: '#2a2a2a',
+    border: '1px solid #3a3a3a'
   },
   radio: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    accentColor: '#4a9eff'
+  },
+  radioContent: {
+    flex: 1
+  },
+  diffName: {
+    color: '#ffffff',
+    fontSize: '16px'
   },
   diffDesc: {
     display: 'block',
     fontSize: '12px',
-    color: '#666'
+    color: '#888888',
+    marginTop: '4px'
   },
   checkboxLabel: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    color: '#cccccc'
   },
   checkbox: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    accentColor: '#4a9eff'
   },
   input: {
     width: '100%',
-    padding: '8px 12px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
+    padding: '10px 12px',
+    border: '1px solid #3a3a3a',
+    borderRadius: '8px',
     fontSize: '14px',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    backgroundColor: '#2a2a2a',
+    color: '#ffffff'
   },
   error: {
-    color: '#e74c3c',
+    color: '#ff6b6b',
     fontSize: '12px',
     marginTop: '5px',
     marginBottom: 0
   },
+  statsTabs: {
+    display: 'flex',
+    gap: '10px',
+    marginBottom: '20px',
+    borderBottom: '1px solid #333',
+    paddingBottom: '10px'
+  },
+  tabButton: {
+    padding: '8px 16px',
+    backgroundColor: 'transparent',
+    color: '#888888',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    transition: 'all 0.2s'
+  },
+  activeTab: {
+    backgroundColor: '#4a9eff',
+    color: '#ffffff'
+  },
   statsContainer: {
-    backgroundColor: '#f8f9fa',
-    padding: '15px',
-    borderRadius: '8px',
-    marginBottom: '20px'
+    backgroundColor: '#2a2a2a',
+    padding: '20px',
+    borderRadius: '12px',
+    marginBottom: '20px',
+    border: '1px solid #3a3a3a'
+  },
+  statsHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    marginBottom: '16px'
+  },
+  statsIcon: {
+    fontSize: '20px'
   },
   statsTitle: {
-    marginTop: 0,
-    marginBottom: '10px',
+    margin: 0,
     fontSize: '16px',
-    color: '#2c3e50'
+    color: '#ffffff'
+  },
+  statsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '12px',
+    marginBottom: '16px'
+  },
+  statCard: {
+    textAlign: 'center',
+    padding: '12px',
+    backgroundColor: '#1a1a1a',
+    borderRadius: '8px',
+    border: '1px solid #3a3a3a'
+  },
+  statValue: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    color: '#4a9eff',
+    marginBottom: '4px'
+  },
+  statLabel: {
+    fontSize: '12px',
+    color: '#888888'
+  },
+  progressBar: {
+    height: '6px',
+    backgroundColor: '#1a1a1a',
+    borderRadius: '3px',
+    overflow: 'hidden'
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#4a9eff',
+    transition: 'width 0.3s ease'
+  },
+  allStatsContainer: {
+    marginBottom: '20px'
+  },
+  difficultyStatsCard: {
+    backgroundColor: '#2a2a2a',
+    padding: '16px',
+    borderRadius: '10px',
+    marginBottom: '12px',
+    border: '1px solid #3a3a3a'
+  },
+  difficultyStatsHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '12px',
+    paddingBottom: '8px',
+    borderBottom: '1px solid #3a3a3a'
+  },
+  difficultyStatsName: {
+    color: '#ffffff',
+    fontSize: '16px'
+  },
+  difficultyStatsBadge: {
+    backgroundColor: '#4a9eff',
+    color: '#ffffff',
+    padding: '2px 8px',
+    borderRadius: '12px',
+    fontSize: '12px'
+  },
+  difficultyStatsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '12px'
+  },
+  difficultyStat: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+    fontSize: '12px',
+    color: '#888888'
+  },
+  totalStatsCard: {
+    backgroundColor: '#4a9eff',
+    padding: '20px',
+    borderRadius: '12px',
+    marginTop: '16px',
+    textAlign: 'center'
+  },
+  totalStatsHeader: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: '16px'
+  },
+  totalStatsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '16px'
+  },
+  totalStatValue: {
+    fontSize: '28px',
+    fontWeight: 'bold',
+    color: '#ffffff'
+  },
+  totalStatLabel: {
+    fontSize: '12px',
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginTop: '4px'
   },
   buttonGroup: {
     display: 'flex',
-    gap: '10px',
-    justifyContent: 'flex-end'
+    gap: '12px',
+    justifyContent: 'flex-end',
+    marginTop: '20px'
   },
   cancelButton: {
     padding: '10px 20px',
-    backgroundColor: '#95a5a6',
-    color: 'white',
+    backgroundColor: '#3a3a3a',
+    color: '#ffffff',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '8px',
     cursor: 'pointer',
-    fontSize: '14px'
+    fontSize: '14px',
+    transition: 'all 0.2s'
   },
   submitButton: {
     padding: '10px 20px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
+    backgroundColor: '#4a9eff',
+    color: '#ffffff',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '8px',
     cursor: 'pointer',
-    fontSize: '14px'
+    fontSize: '14px',
+    transition: 'all 0.2s'
   }
 };

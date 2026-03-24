@@ -1,74 +1,93 @@
 import React, { useState } from "react";
 import Button from "../components/Button";
-
-const styles = {
-  container: {
-    textAlign: "center",
-    padding: "40px",
-    maxWidth: "600px",
-    margin: "0 auto"
-  },
-  difficultyContainer: {
-    marginBottom: "20px"
-  },
-  buttonsContainer: {
-    display: "flex",
-    gap: "10px",
-    marginTop: "10px",
-    justifyContent: "center"
-  },
-  difficultyButton: (isSelected) => ({
-    padding: "10px 20px",
-    backgroundColor: isSelected ? "#4CAF50" : "#f0f0f0",
-    color: isSelected ? "white" : "black",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "all 0.3s"
-  })
-};
+import DifficultySettings from "../components/DifficultySettings";
+import { useDifficulty } from "../contexts/DifficultyContext";
 
 export default function Start({ onStart }) {
-  const [difficulty, setDifficulty] = useState('medium');
-
-  const difficulties = [
-    { id: 'easy', name: 'Легкий' },
-    { id: 'medium', name: 'Середній' },
-    { id: 'hard', name: 'Важкий' }
-  ];
+  const [showSettings, setShowSettings] = useState(false);
+    const { currentDifficulty, difficultyConfig, getStatsForDifficulty } = useDifficulty();
+    const stats = getStatsForDifficulty(currentDifficulty);
 
   const handleStart = () => {
-    onStart(difficulty);
-  };
+      onStart(currentDifficulty);
+    };
 
   return (
     <div className="container">
       <h1>Welcome to Sudoku!</h1>
+
+      <div style={styles.infoCard}>
+              <h3>Поточний рівень: {difficultyConfig.name}</h3>
+              <p>{difficultyConfig.cellsToRemove} пустих клітинок</p>
+              <p>Множник часу: x{difficultyConfig.timeMultiplier}</p>
+
+              {stats.gamesPlayed > 0 && (
+                <div style={styles.stats}>
+                  <h4>Ваша статистика:</h4>
+                  <p>Зіграно: {stats.gamesPlayed}</p>
+                  <p>Перемог: {stats.gamesWon}</p>
+                  <p>Успішність: {Math.round((stats.gamesWon / stats.gamesPlayed) * 100)}%</p>
+                </div>
+              )}
+            </div>
       
-      <div style={{ marginBottom: '20px' }}>
-        <h3>Оберіть рівень складності:</h3>
-        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-          {difficulties.map((diff) => (
-            <button
-              key={diff.id}
-              onClick={() => setDifficulty(diff.id)}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: difficulty === diff.id ? '#4CAF50' : '#f0f0f0',
-                color: difficulty === diff.id ? 'white' : 'black',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              <div>{diff.name}</div>
-              <small>{diff.description}</small>
-            </button>
-          ))}
-        </div>
-      </div>
-      
-      <Button onClick={handleStart}>Start Game</Button>
-    </div>
-  );
-}
+            <div style={styles.buttonGroup}>
+              <Button onClick={handleStart}>Почати гру</Button>
+              <Button
+                onClick={() => setShowSettings(true)}
+                style={{ backgroundColor: "#6c757d" }}
+              >
+                Налаштування
+              </Button>
+            </div>
+
+            {showSettings && (
+              <DifficultySettings
+                onClose={() => setShowSettings(false)}
+                onApply={() => setShowSettings(false)}
+              />
+            )}
+          </div>
+        );
+      }
+
+      const styles = {
+        container: {
+          textAlign: "center",
+          padding: "40px",
+          maxWidth: "600px",
+          margin: "0 auto",
+          backgroundColor: "#0a0a0a"
+        },
+        title: {
+          color: "#ffffff",
+          marginBottom: "30px"
+        },
+        cardTitle: {
+            color: "#ffffff",
+            marginTop: 0,
+            marginBottom: "15px"
+          },
+          cardText: {
+            color: "#cccccc",
+            margin: "10px 0"
+          },
+          stats: {
+            marginTop: "15px",
+            paddingTop: "15px",
+            borderTop: "1px solid #333"
+          },
+          statsTitle: {
+            color: "#4a9eff",
+            marginBottom: "10px"
+          },
+          statsText: {
+            color: "#cccccc",
+            margin: "5px 0"
+          },
+          buttonGroup: {
+            display: "flex",
+            gap: "15px",
+            justifyContent: "center"
+          }
+        };

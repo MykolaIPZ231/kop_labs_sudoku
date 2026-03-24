@@ -9,12 +9,13 @@ export default function GameControls({ onFinish, isChecking }) {
         style={{
           padding: "12px 30px",
           fontSize: "18px",
-          backgroundColor: isChecking ? "#95a5a6" : "#2ecc71",
-          color: "white",
+          backgroundColor: isChecking ? "#555" : "#2ecc71",
+          color: "#ffffff",
           border: "none",
           borderRadius: 5,
           cursor: isChecking ? "wait" : "pointer",
-          minWidth: "150px"
+          minWidth: "150px",
+          transition: "all 0.2s"
         }}
         disabled={isChecking}
       >
