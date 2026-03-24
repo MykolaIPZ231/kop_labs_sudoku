@@ -5,55 +5,61 @@ import Header from "./components/Header";
 import Start from "./page/Start";
 import Game from "./page/Game";
 import Res from "./page/Res";
+import useSudokuGame from "./hooks/useSudokuGame";
 import "./style.css";
 import { useState } from "react";
 
-export default function App() {
+function App() {
     const { page, goToStart, goToGame, goToResults } = useNavigation();
-    const sudoku = useSudoku();
-    const generator = useSudokuGenerator('medium');
-    const [currentDifficulty, setCurrentDifficulty] =  useState('medium');
+    const {
+        grid,
+        initialGrid,
+        selectedCell,
+        selectCell,
+        setCellValue,
+        startNewGame,
+        resetGrid
+      } = useSudokuGame();
 
-    const handleStart = (difficulty) => {
-        setCurrentDifficulty(difficulty);
-        generator.regenerate(difficulty); 
-        sudoku.setInitialGridValues(generator.board);
+    const handleStartGame = (difficulty) => {
+        startNewGame(difficulty);
         goToGame();
     };
 
-    const handleRestart = () => {
-      generator.regenerate(currentDifficulty);
-      sudoku.setInitialGridValues(generator.board);
-      goToGame();
-    }
+    const handleFinishGame = () =>{
+        goToResults();
+    };
 
-    const handleGoHome = () => {
+    const handleRestartGame = () => {
+      resetGrid();
+      goToStart();
+    };
+
+    const handleBackToStart = () => {
       goToStart();
     }
     return (
-      <>
-        <Header />
-        {page === "start" && (
-          <Start onStart={handleStart} />
-        )}
-
-        {page === "game" && (
-          <Game
-            board={sudoku.grid}
-            initialGrid={sudoku.initialGrid}
-            selectedCell={sudoku.selectedCell}
-            selectCell={sudoku.selectCell}
-            setCellValue={sudoku.setCellValue}
-            onFinish={goToResults}
-          />
-        )}
+       <div className="App">
+            {page === "start" && <Start onStart={handleStartGame} />}
+            {page === "game" && (
+              <Game
+                board={grid}
+                initialGrid={initialGrid}
+                selectedCell={selectedCell}
+                selectCell={selectCell}
+                setCellValue={setCellValue}
+                onFinish={handleFinishGame}
+              />
+            )}
 
         {page === "results" && (
           <Res
-          onStart={handleGoHome}
-          onRestart={handleRestart} 
+          onStart={handleRestartGame}
+          onRestart={handleBackToStart}
           />
         )}
-      </>
+      </div>
     );
 }
+
+export default App;

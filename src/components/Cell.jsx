@@ -1,10 +1,20 @@
+import React, { useState } from "react";
+
 export default function Cell({ value, isSelected, onClick, row, col, isInitial = false }) {
+    const [isHovered, setIsHovered] = useState(false);
+
     const borderStyle = {
         borderTop: row % 3 === 0 ? '2px solid #000' : '1px solid #999',
         borderLeft: col % 3 === 0 ? '2px solid #000' : '1px solid #999',
         borderRight: col === 8 ? '2px solid #000' : (col + 1) % 3 === 0 ? '2px solid #000' : '1px solid #999',
         borderBottom: row === 8 ? '2px solid #000' : (row + 1) % 3 === 0 ? '2px solid #000' : '1px solid #999',
     };
+
+      const getBackgroundColor = () => {
+        if (isSelected) return "#5aa4daff";
+        if (isHovered && !isInitial && !isSelected) return "#e8f0fe";
+        return "#fff";
+      };
 
     return (
         <div 

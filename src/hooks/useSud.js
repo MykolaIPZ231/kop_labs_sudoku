@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export default function useSudoku() {
     const emptyGrid = Array.from({ length: 9 }, () => Array(9).fill(0));
@@ -14,32 +14,33 @@ export default function useSudoku() {
         setSelectedCell({ row, col });
     };
 
-    const setCellValue = (value) => {
-        if(!selectedCell) return;
+        const setCellValue = useCallback((value) => {
+            setGrid(prev => {
+                if (!selectedCell) return prev;
 
-        const { row, col } = selectedCell;
+                const { row, col } = selectedCell;
 
-        if(initialGrid[row][col] !== 0){
-            return;
-        }
+                if (initialGrid[row]?.[col] !== 0) {
+                    return prev;
+                }
 
-        setGrid(prev => {
-            const newGrid = prev.map(r => [...r]);
-            newGrid[row][col] = value;
-            return newGrid;
-        });
-    };
+                const newGrid = prev.map(r => [...r]);
+                newGrid[row][col] = value;
+                return newGrid;
+            });
+        }, [selectedCell, initialGrid]);
 
-    const resetGrid = () => {
-        setGrid(initialGrid);
-        setSelectedCell(null);
-    };
+        const resetGrid = useCallback(() => {
+            setGrid(initialGrid.map(row => [...row]));
+            setSelectedCell(null);
+        }, [initialGrid]);
 
-    const setInitialGridValues = (newGrid) => {
-        setInitialGrid(newGrid.map(row => [...row]));
-        setGrid(newGrid.map(row => [...row]));
-        setSelectedCell(null);
-    };
+    const setInitialGridValues = useCallback((newGrid) => {
+            const gridCopy = newGrid.map(row => [...row]);
+            setInitialGrid(gridCopy);
+            setGrid(gridCopy);
+            setSelectedCell(null);
+        }, []);
 
     return{
         grid,

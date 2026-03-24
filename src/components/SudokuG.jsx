@@ -1,6 +1,10 @@
 import Cell from "./Cell.jsx";
+import React from "react";
+import useInitialCellCheck from "../hooks/useInitialCellCheck";
 
 export default function SudokuG({ grid, selectedCell, onCellClick, initialGrid }) {
+    const { isInitialCell } = useInitialCellCheck(initialGrid);
+
     return (
         <div style={{
             display: "grid",
