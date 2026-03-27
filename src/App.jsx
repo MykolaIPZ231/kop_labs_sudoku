@@ -1,73 +1,121 @@
-import useNavigation from "./hooks/useNavigation";
-import useSudoku from "./hooks/useSud";
-import useSudokuGenerator from "./hooks/sudGen";
-import Header from "./components/Header";
-import Start from "./page/Start";
-import Game from "./page/Game";
-import Res from "./page/Res";
-import useSudokuGame from "./hooks/useSudokuGame";
-import { DifficultyProvider } from "./contexts/DifficultyContext";
-import "./style.css";
-import { useState } from "react";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { UserProvider, useUser } from './contexts/UserContext';
+import { DifficultyProvider } from './contexts/DifficultyContext';
+import { GlobalStyles } from './styles/GlobalStyles';
+import { NavBar, NavContainer, NavLink } from './styles/StyledComponents';
+import UserSelection from './page/UserSelection';
+import UserProfile from './page/UserProfile';
+import GameWrapper from './page/GameWrapper';
+import Res from './page/Res';
+import useSudokuGame from './hooks/useSudokuGame';
+
+function Navigation() {
+  const { currentUser } = useUser();
+
+  return (
+    <NavBar>
+      <NavContainer>
+        <NavLink href="/" style={{ fontSize: '24px', fontWeight: 'bold' }}>
+          Sudoku
+        </NavLink>
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <NavLink href="/">Головна</NavLink>
+          {currentUser && (
+            <>
+              <NavLink href={`/user/${currentUser.id}`}>Профіль</NavLink>
+              <NavLink href="/game">Грати</NavLink>
+            </>
+          )}
+        </div>
+      </NavContainer>
+    </NavBar>
+  );
+}
+
+function GameRoute() {
+  const { userId } = useParams();
+  const { currentUser, loginUser } = useUser();
+  const { grid, initialGrid, selectedCell, selectCell, setCellValue, startNewGame } = useSudokuGame();
+
+  React.useEffect(() => {
+    if (userId && (!currentUser || currentUser.id !== userId)) {
+      loginUser(userId);
+    }
+  }, [userId, currentUser, loginUser]);
+
+  const handleFinishGame = () => {
+    window.location.href = '/results';
+  };
+
+  const handleNewGame = () => {
+    startNewGame('medium');
+  };
+
+  if (!currentUser) {
+    return <Navigate to="/" />;
+  }
+
+  return (
+    <GameWrapper
+      board={grid}
+      initialGrid={initialGrid}
+      selectedCell={selectedCell}
+      selectCell={selectCell}
+      setCellValue={setCellValue}
+      onFinish={handleFinishGame}
+      onNewGame={handleNewGame}
+    />
+  );
+}
+
+function ResultsRoute() {
+  const { currentUser } = useUser();
+  const navigate = useNavigate();
+
+  const handleRestart = () => {
+    navigate('/game');
+  };
+
+  const handleStart = () => {
+    navigate('/');
+  };
+
+  return (
+    <Res
+      onRestart={handleRestart}
+      onStart={handleStart}
+      username={currentUser?.username}
+    />
+  );
+}
+
+function AppRoutes() {
+  return (
+    <>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<UserSelection />} />
+        <Route path="/user/:userId" element={<UserProfile />} />
+        <Route path="/game" element={<GameRoute />} />
+        <Route path="/game/user/:userId" element={<GameRoute />} />
+        <Route path="/results" element={<ResultsRoute />} />
+      </Routes>
+    </>
+  );
+}
 
 function App() {
-    const { page, goToStart, goToGame, goToResults } = useNavigation();
-    const {
-        grid,
-        initialGrid,
-        selectedCell,
-        selectCell,
-        setCellValue,
-        startNewGame,
-        resetGrid
-      } = useSudokuGame();
-
-    const handleStartGame = (difficulty) => {
-        startNewGame(difficulty);
-        goToGame();
-    };
-
-    const handleFinishGame = () =>{
-        goToResults();
-    };
-
-    const handleRestartGame = () => {
-      resetGrid();
-      goToStart();
-    };
-
-    const handleBackToStart = () => {
-      goToStart();
-    };
-
-    const handleNewGame = () => {
-        goToStart();
-    };
-
-    return (
+  return (
+    <BrowserRouter>
+      <UserProvider>
         <DifficultyProvider>
-       <div className="App">
-            {page === "start" && <Start onStart={handleStartGame} />}
-            {page === "game" && (
-              <Game
-                board={grid}
-                initialGrid={initialGrid}
-                selectedCell={selectedCell}
-                selectCell={selectCell}
-                setCellValue={setCellValue}
-                onFinish={handleFinishGame}
-              />
-            )}
-
-        {page === "results" && (
-          <Res
-          onStart={handleRestartGame}
-          onRestart={handleBackToStart}
-          />
-        )}
-      </div>
-      </DifficultyProvider>
-    );
+          <GlobalStyles />
+          <AppRoutes />
+        </DifficultyProvider>
+      </UserProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;
